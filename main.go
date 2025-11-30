@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"golang.org/x/term"
 )
@@ -17,8 +18,14 @@ func main() {
 			_, _ = fmt.Fprintln(os.Stderr, "Failed to restore terminal:", err)
 		}
 	}()
-	//todo : term.GetSize to use all type of term window
 
+	width, height, err := term.GetSize(int(os.Stdin.Fd()))
+	if err != nil {
+		width, height = 0, 0
+	}
+
+	fmt.Printf("term: %dw%dh\r\n", width, height)
+	fmt.Printf("%s\r\n\n", strings.Repeat("_", width-1))
 	fmt.Print("Just Type (ESC to quit):\r")
 	//todo: care about arrow keys later since it take 3 byte
 	buf := make([]byte, 1)
